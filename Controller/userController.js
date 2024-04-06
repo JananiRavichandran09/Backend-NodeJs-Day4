@@ -62,7 +62,7 @@ export const loginUser = (req, res) => {
 
 
 export const forgotpassword = async (req, res) => {
-    const { email } = req.body
+    const {_id, email } = req.body
     User.findOne({ email: email })
         .then(user => {
             if (!user) {
@@ -82,7 +82,7 @@ var mailOptions = {
   from: process.env.EMAIL_ID,
   to: email,
   subject: 'Reset Your Password',
-  text: `http://localhost:5173/resetpassword/${token}`
+  text: `http://localhost:5173/resetpassword/${user._id}/${token}`
 };
 
 transporter.sendMail(mailOptions, function(error, info){
@@ -101,20 +101,28 @@ transporter.sendMail(mailOptions, function(error, info){
 
 
 
-export const  resetPassword = async (req, res) => {
-    const { token } = req.params
+export const  resetPassword =  (req, res) => {
+    const {id, token } = req.params
     const { password } = req.body
   
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const id = decoded.id;
-        const hashpassword = bcrypt.hash(password, 10)
-        await User.findByIdAndUpdate({ _id: id }, { password: hashpassword })
-        return res.json({status:true, message:"updated password"})
-    } catch (error) {
-        console.log(error)
-        return res.json("invalid token")
-    }
+   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.json({ Status: "Error with Token" })
+            
+        }
+        else {
+            
+            bcrypt.hash(password, 10)
+                .then(hash => {
+                    User.findByIdAndUpdate({ _id: id }, { password: hash })
+                        .then(u => res.send({ Status: "Success" }))
+                        .catch(err => res.send({ Status: err }))
+                    console.log(err);
+                })
+                .catch(err => res.send({ Status: err }))
+            console.log(err);
+        }
+    })
 }
 
 
