@@ -12,7 +12,7 @@ export const registerUser = async (req, res) => {
         console.log("hashPassword", hashPassword)
         const newUser = new User ({username,email, password:hashPassword})
         await newUser.save()
-        res.status(200).json({message:"Registered Successfully", data:newUser})
+        res.status(200).json({message:"Registered Successfully" , data:newUser})
         
     } 
     catch (error) {
@@ -82,7 +82,7 @@ var mailOptions = {
   from: process.env.EMAIL_ID,
   to: email,
   subject: 'Reset Your Password',
-  text: `http://localhost:5173/resetpassword/${user._id}/${token}`
+  text: `https://register-login-page-wdb.netlify.app/resetpassword/${user._id}/${token}`
 };
 
 transporter.sendMail(mailOptions, function(error, info){
@@ -128,26 +128,3 @@ export const  resetPassword =  (req, res) => {
 
 
 
-// export const  resetPassword = async (req, res) => {
-//     const { id, token } = req.params
-//     const { password } = req.body
-  
-//     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-//         if (err) {
-//             return res.json({ Status: "Error with Token" })
-            
-//         }
-//         else {
-            
-//             bcrypt.hash(password, 10)
-//                 .then(hash => {
-//                     User.findByIdAndUpdate({ _id: id }, { password: hash })
-//                         .then(u => res.send({ Status: "Success" }))
-//                         .catch(err => res.send({ Status: err }))
-//                     console.log(err);
-//                 })
-//                 .catch(err => res.send({ Status: err }))
-//             console.log(err);
-//         }
-//     })
-// }
