@@ -9,7 +9,8 @@ dotenv.config()
 const port = process.env.PORT
 const app = express()
 app.use(cors({
-    
+    origin: ["https://register-login-page-wdb.netlify.app"],
+    method: ["GET","POST"],
     credentials: true,
 }))
 app.use(express.json())
@@ -23,5 +24,3 @@ app.listen(port, () => {
 })
 
 
-// origin: ["https://register-login-page-wdb.netlify.app/api/user"],
-//     method: ["GET","POST"],
