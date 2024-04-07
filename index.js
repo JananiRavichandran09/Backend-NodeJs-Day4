@@ -9,7 +9,7 @@ dotenv.config()
 const port = process.env.PORT
 const app = express()
 app.use(cors({
-    origin: ["https://register-login-page-wdb.netlify.app/"],
+    origin: ["https://localhost:5173"],
     method: ["GET","POST"],
     credentials: true,
 }))
